@@ -1,0 +1,85 @@
+Fuzzing Black
+
+Alexey Preobrazhenskiy
+https://t.me/dizzy57
+https://github.com/dizzy57/fuzzing_black
+
+* Discovery
+
+# I was showing to my friend how awesome `black` is and thought
+
+Let's add some unnecessary parentheses
+
+	print((("some logging message")))
+
+# I ran black and
+Instead of familiar
+
+	All done! ✨ 🍰 ✨
+
+I've got
+
+	error: cannot format test.py: INTERNAL ERROR:
+	Black produced different code on the second pass of the formatter.
+	Please report a bug on https://github.com/python/black/issues.
+
+* Hypothesis!
+
+There's way more inconsistent formatting bugs out there and `black` is able to catch them on its own.
+
+# Black has two built-in safety mechanisms:
+# - `assert_stable()` running the formatting pass second time
+# - `assert_equivalent()` checking that ASTs are equivalent
+# So we could use a property-based testing, like... `hypothesis`
+
+- Generate random ugly code
+- Run black on it
+- Wait for safety mechanisms to trigger
+- ...
+- Profit!
+
+# First two points can be done in a massively parallel way
+# The problem here is that we need to write a source code generator
+# In `hypothesis` library these are called "strategies".
+
+* Coverage-guided mutation-based fuzzing
+
+- Get test cases
+- Change them slightly
+- Record coverage with `sys.settrace()`
+- Save ones that give you new coverage
+
+# If you are doing this yourself: disable checksums and *accept*malformed*inputs*.
+# They give you coverage and can mutate into correct ones.
+
+.link http://lcamtuf.coredump.cx/afl/
+
+* Binary formats
+
+.image https://parametric.press/issue-01/unraveling-the-jpeg/static/images/glitchy-cat.gif
+.link https://parametric.press/issue-01/unraveling-the-jpeg
+
+* Dictionary for python
+
+Give AFL all the nonterminals from the grammar
+
+	try_stmt: ('try' ':' suite
+	           ((except_clause ':' suite)+
+	            ['else' ':' suite]
+	            ['finally' ':' suite] |
+	           'finally' ':' suite))
+
+
+.link https://docs.python.org/3/reference/grammar.html
+
+* Down the rabbit hole
+
+- parallel fuzzing
+- faster fuzzing (persistent mode)
+- test case minimization
+- corpus minimization
+- crash explorer
+
+Way more:
+
+.link https://fuzzingbook.org
