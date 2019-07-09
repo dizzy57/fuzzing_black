@@ -15,6 +15,13 @@ You can view slides online at https://talks.godoc.org/github.com/dizzy57/fuzzing
 3. Set up `PYTHONPATH` environment so that `import black` imports the development version of `black`.
 4. Run `py-afl-fuzz -i afl_input/ -o afl_output/ -x python.dict -- python fuzz_persistent.py`.
 
+## Trophies:
+
+1. [Unwrapping multiple parentheses](https://github.com/python/black/issues/836)
+2. [Comments and parentheses](https://github.com/python/black/issues/853)
+3. [assert (\*x)](https://github.com/python/black/issues/921)
+4. [Explicit line join in the first line](https://github.com/python/black/issues/922)
+
 ## License
 
 ### The [Unlicense](http://unlicense.org):
